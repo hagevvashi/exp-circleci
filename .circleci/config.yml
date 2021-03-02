@@ -1,0 +1,25 @@
+version: 2.1
+
+executors:
+  nodejs:
+    docker:
+      - image: circleci/node:14.16.0
+
+jobs:
+  foo:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Debug
+          command: ls -la /
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - foo
