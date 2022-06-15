@@ -20,11 +20,11 @@ jobs:
           name: "Generate yaml"
           command: |
             yq eval-all '. as $item ireduce ({}; . * $item )' .circleci/build.yml .circleci/deploy.yml > .circleci/merged.yml
-      - contination/continue:
+      - continuation/continue:
           configuration_path: .circleci/merged.yml
 
 workflows:
   version: 2
-  ci:
+  setup:
     jobs:
       - yq
