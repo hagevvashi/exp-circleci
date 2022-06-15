@@ -1,0 +1,19 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: "Build"
+          shell: "/bin/bash -euo pipefail"
+          command: |
+            echo "Build Start"
+            mkdir dist
+            echo $(date +%s) > dist/build_result
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist

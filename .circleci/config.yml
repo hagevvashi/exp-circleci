@@ -1,25 +1,30 @@
 version: 2.1
 
+setup: true
+
+orbs:
+  continuation: circlecicontinuation@0.2.0
+
 executors:
   nodejs:
     docker:
       - image: circleci/node:14.16.0
 
 jobs:
-  foo:
-    executor:
-      name: nodejs
+  yq:
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: npm ci
-      - run:
-          name: Debug
-          command: ls -la ~/
+          name: "Generate yaml"
+          command: |
+            yq eval-all '. as $item ireduce ({}; . * $item )' .circleci/build.yml .circleci/deploy.yml > .circleci/merged.yml
+      - contination/continue:
+          configuration_path: .circleci/merged.yml
 
 workflows:
   version: 2
   ci:
     jobs:
-      - foo
+      - yq

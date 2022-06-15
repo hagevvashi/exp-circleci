@@ -1,0 +1,29 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run:
+          name: "Debug"
+          shell: "/bin/bash -euo pipefail"
+          command: |
+            ls -la dist
+      - store_artifacts:
+          path: ./dist
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - /.*/
